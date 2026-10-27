@@ -1,4 +1,4 @@
-package com.mpaz.ticket.ui
+package com.example.dsy1105_reservas.ui
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
