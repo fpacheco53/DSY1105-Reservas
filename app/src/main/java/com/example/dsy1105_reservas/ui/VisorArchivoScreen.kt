@@ -1,4 +1,4 @@
-package com.mpaz.ticket.ui
+package com.example.dsy1105_reservas.ui
 
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Box
