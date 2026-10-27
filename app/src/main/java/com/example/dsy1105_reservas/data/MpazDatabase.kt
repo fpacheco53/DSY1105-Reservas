@@ -1,4 +1,4 @@
-package com.mpaz.ticket.data
+package com.example.dsy1105_reservas.data
 
 import android.content.Context
 import androidx.room.Database
