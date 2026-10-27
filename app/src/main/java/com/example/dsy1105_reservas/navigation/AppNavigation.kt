@@ -1,4 +1,4 @@
-package com.mpaz.ticket.navigation
+package com.example.dsy1105_reservas.navigation
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
