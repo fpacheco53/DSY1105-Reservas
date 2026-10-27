@@ -1,4 +1,4 @@
-package com.mpaz.ticket.model
+package com.example.dsy1105_reservas.model
 
 import androidx.room.Entity
 import androidx.room.Index
