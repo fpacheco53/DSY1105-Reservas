@@ -1,4 +1,4 @@
-package com.mpaz.ticket.data
+package com.example.dsy1105_reservas.data
 
 import java.security.MessageDigest
 import java.security.SecureRandom
