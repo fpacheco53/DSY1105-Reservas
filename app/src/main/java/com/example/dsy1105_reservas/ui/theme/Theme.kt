@@ -1,4 +1,4 @@
-package com.mpaz.ticket.ui.theme
+package com.example.dsy1105_reservas.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
