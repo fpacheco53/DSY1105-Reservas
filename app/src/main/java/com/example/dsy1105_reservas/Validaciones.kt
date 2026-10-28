@@ -2,7 +2,7 @@ package com.example.dsy1105_reservas
 
 import android.util.Patterns
 
-/** Reglas de validación de formularios. */
+/** Reglas de validación de formularios */
 object Validaciones {
 
     fun obligatorio(valor: String, campo: String): String? =
@@ -20,7 +20,7 @@ object Validaciones {
         else -> null
     }
 
-    /** Iniciar sesión solo exige que el campo no esté vacío. */
+    /** Iniciar sesión */
     fun claveLogin(valor: String): String? =
         if (valor.isEmpty()) "Ingresa tu contraseña." else null
 
