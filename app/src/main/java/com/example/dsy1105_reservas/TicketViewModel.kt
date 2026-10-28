@@ -35,17 +35,17 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.util.UUID
 
-/** Estado de la sesión. */
+/** Estado de la sesión */
 sealed interface Sesion {
     data object Cargando : Sesion
     data object SinSesion : Sesion
     data class Activa(val usuario: Usuario) : Sesion
 }
 
-/** Error de validación al subir una foto. */
+/** Error de validación al subir una foto */
 private class FotoInvalida(mensaje: String) : Exception(mensaje)
 
-/** Estado central de la app. Los datos viven en Room y se exponen como StateFlow. */
+/** Estado central de la app */
 class TicketViewModel(application: Application) : AndroidViewModel(application) {
 
     private val dao = MpazDatabase.obtener(application).dao()
@@ -68,7 +68,7 @@ class TicketViewModel(application: Application) : AndroidViewModel(application) 
     val requerimientos = dao.requerimientos().comoEstado(emptyList())
     val solicitudes = dao.solicitudes().comoEstado(emptyList())
 
-    /** El administrador ve todas las fotos, los demás roles solo propias. */
+    /** Admin ve todas las fotos, otros roles solo propias */
     val archivos = combine(dao.archivos(), sesion) { lista, sesion ->
         val usuario = (sesion as? Sesion.Activa)?.usuario
         when {
@@ -89,14 +89,14 @@ class TicketViewModel(application: Application) : AndroidViewModel(application) 
 
     // ---- Autenticación ----
 
-    /** El hash de la contraseña se calcula fuera del hilo principal. */
+    /** Hash de la contraseña */
     private suspend fun crearUsuario(nombre: String, correo: String, clave: String, rol: Rol) {
         val sal = Seguridad.nuevaSal()
         val hash = withContext(Dispatchers.Default) { Seguridad.hash(clave, sal) }
         dao.insertarUsuario(Usuario(nombre = nombre.trim(), correo = correo, rol = rol, sal = sal, hashClave = hash))
     }
 
-    /** onResultado recibe un mensaje de error, o null si la cuenta se creo. */
+    /** Mensaje de error o null si la cuenta ya se creo */
     fun registrar(nombre: String, correo: String, clave: String, rol: Rol, onResultado: (String?) -> Unit) {
         viewModelScope.launch {
             val correoNormalizado = correo.trim().lowercase()
@@ -112,7 +112,7 @@ class TicketViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    /** onResultado recibe un mensaje de error, o null si la sesión se inicio. */
+    /** Mensaje de error o null si la sesion ya se inicio */
     fun iniciarSesion(correo: String, clave: String, onResultado: (String?) -> Unit) {
         viewModelScope.launch {
             val usuario = dao.usuarioPorCorreo(correo.trim().lowercase())
@@ -134,7 +134,7 @@ class TicketViewModel(application: Application) : AndroidViewModel(application) 
         sesion.value = Sesion.SinSesion
     }
 
-    // ---- Eventos y requerimientos (los formularios validan antes de llamar) ----
+    // ---- Eventos y requerimientos ----
 
     fun registrarEvento(titulo: String, descripcion: String, fecha: LocalDate, prioridad: Prioridad, responsable: String) {
         viewModelScope.launch {
@@ -155,7 +155,7 @@ class TicketViewModel(application: Application) : AndroidViewModel(application) 
 
     // ---- Solicitud de espacios ----
 
-    /** Devuelve un mensaje de error, o null si la solicitud se registro como pendiente. */
+    /** Mensaje de error o null si la solicitud se registro como pendiente */
     fun enviarSolicitud(
         espacio: Espacio,
         solicitante: String,
@@ -197,7 +197,7 @@ class TicketViewModel(application: Application) : AndroidViewModel(application) 
         return null
     }
 
-    /** Solo el administrador resuelve solicitudes. */
+    /** Admin resuelve solicitudes. */
     fun resolverSolicitud(id: Long, aprobar: Boolean): String? {
         if (usuarioActual?.rol != Rol.ADMINISTRADOR) return "Solo el administrador puede resolver solicitudes."
         val solicitud = solicitudes.value.firstOrNull { it.id == id } ?: return null
@@ -223,7 +223,7 @@ class TicketViewModel(application: Application) : AndroidViewModel(application) 
 
     // ---- Fotos ----
 
-    /** Copia la foto elegida al almacenamiento interno y registra sus datos. onResultado recibe un error o null. */
+    /** Copia la foto a almacenamiento interno y registra datos */
     fun cargarFoto(uri: Uri, onResultado: (String?) -> Unit) {
         val usuario = usuarioActual ?: return onResultado("Debes iniciar sesión para subir fotos.")
         viewModelScope.launch {
@@ -241,7 +241,7 @@ class TicketViewModel(application: Application) : AndroidViewModel(application) 
         val app = getApplication<Application>()
         val resolver = app.contentResolver
 
-        // Se valida por tipo MIME (lo informa el sistema), no por el nombre del archivo.
+        // Validacion de foto
         val mime = resolver.getType(uri).orEmpty().lowercase()
         val extension = when (mime) {
             "image/jpeg" -> "jpg"
@@ -278,7 +278,7 @@ class TicketViewModel(application: Application) : AndroidViewModel(application) 
         )
     }
 
-    /** Elimina el registro y el archivo físico. Solo el administrador pueden hacerlo. */
+    /** Elimina el registro y el archivo fisico. Solo admin. */
     fun eliminarArchivo(archivo: Archivo) {
         val usuario = usuarioActual ?: return
         if (usuario.rol != Rol.ADMINISTRADOR && archivo.usuarioId != usuario.id) return
