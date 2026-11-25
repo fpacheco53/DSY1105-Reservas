@@ -1,9 +1,15 @@
 package com.example.dsy1105_reservas
 
+<<<<<<< HEAD
 import android.util.Patterns
 
 /** Reglas de validación de formularios */
+=======
+/** Reglas de validación de formularios. */
+>>>>>>> 6178e6d (Se añadieron pruebas unitarias, cambio de android.util.Patterns a REGEX para estandarizacion y pruebas)
 object Validaciones {
+
+    private val REGEX_CORREO = Regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\$")
 
     fun obligatorio(valor: String, campo: String): String? =
         if (valor.isBlank()) "$campo es obligatorio." else null
@@ -16,7 +22,7 @@ object Validaciones {
 
     fun correo(valor: String): String? = when {
         valor.isBlank() -> "Ingresa tu correo."
-        !Patterns.EMAIL_ADDRESS.matcher(valor.trim()).matches() -> "El correo no tiene un formato válido."
+        !REGEX_CORREO.matches(valor.trim()) -> "El correo no tiene un formato válido."
         else -> null
     }
 
