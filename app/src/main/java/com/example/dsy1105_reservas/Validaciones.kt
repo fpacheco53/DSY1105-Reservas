@@ -1,12 +1,6 @@
 package com.example.dsy1105_reservas
 
-<<<<<<< HEAD
-import android.util.Patterns
-
-/** Reglas de validación de formularios */
-=======
 /** Reglas de validación de formularios. */
->>>>>>> 6178e6d (Se añadieron pruebas unitarias, cambio de android.util.Patterns a REGEX para estandarizacion y pruebas)
 object Validaciones {
 
     private val REGEX_CORREO = Regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\$")
